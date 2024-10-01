@@ -11,7 +11,6 @@ app.use(cors({
     credentials: true
 }));
 
-
 app.use(express.json());             // Parse JSON requests
 app.use(cookieParser());             // Parse cookies
 

@@ -144,7 +144,24 @@ const productCtrl = {
         }
     },
    
+    getProductById : async (req, res) => {
+        try {
+            // Find the product by ID using the req.params.id
+            const product = await Products.findById(req.params.id);
 
+            // If the product is not found, return a 404 error
+            if (!product) {
+                return res.status(404).json({ msg: 'Product not found' });
+            }
+
+            // If the product is found, return it with a success status
+            res.json({ status: 'success', product });
+        } catch (error) {
+            // Log the error and return a 500 error
+            console.error('Error fetching product by ID:', error);
+            res.status(500).json({ msg: 'An error occurred', error: error.message });
+        }
+    }
    
 }
 

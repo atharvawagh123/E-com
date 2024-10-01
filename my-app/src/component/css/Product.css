@@ -1,0 +1,105 @@
+/* ProductList.css */
+
+.product-list {
+    padding: 20px;
+    background-color: #f5f5f5; /* Light background for contrast */
+}
+
+.error-message {
+    color: red;
+    margin-bottom: 20px; /* Margin below error message */
+    font-weight: bold; /* Bold for visibility */
+}
+
+.card-container {
+    display: flex;
+    flex-wrap: wrap; /* Allow cards to wrap */
+    justify-content: center; /* Center the cards */
+    gap: 20px; /* Space between cards */
+}
+
+.product-card {
+    background-color: white; /* White background for the card */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Soft shadow */
+    overflow: hidden; /* Prevent overflow */
+    transition: transform 0.3s; /* Smooth transition */
+    width: 300px; /* Fixed width for cards */
+    text-align: center; /* Center text inside card */
+}
+
+.product-card:hover {
+    transform: translateY(-5px); /* Lift effect on hover */
+}
+
+.card-image {
+    width: 100%; /* Full width */
+    height: auto; /* Maintain aspect ratio */
+    max-height: 200px; /* Maximum height for the image */
+    object-fit: cover; /* Cover the area while maintaining aspect ratio */
+}
+
+.card-title {
+    font-size: 20px; /* Title size */
+    font-weight: bold; /* Bold title */
+    margin: 15px 0; /* Margin above and below title */
+    color: #333; /* Dark color for title */
+}
+
+.card-price {
+    font-size: 18px; /* Price size */
+    color: #007bff; /* Blue color for price */
+    margin: 10px 0; /* Margin above and below price */
+}
+
+.card-description {
+    font-size: 14px; /* Description size */
+    line-height: 1.5; /* Better readability */
+    margin: 10px 15px; /* Margin for description */
+}
+
+.card-category {
+    font-size: 12px; /* Smaller category size */
+    color: #777; /* Gray color for category */
+    margin-bottom: 15px; /* Margin below category */
+}
+
+.card-button-container {
+    display: flex;
+    justify-content: space-between; /* Space between buttons */
+    margin: 0 15px 15px; /* Margin around buttons */
+}
+
+.card-add-to-cart {
+    background-color: #28a745; /* Green button */
+    color: white; /* White text */
+    border: none; /* No border */
+    border-radius: 4px; /* Rounded corners */
+    padding: 10px 15px; /* Padding for button */
+    font-size: 16px; /* Button font size */
+    cursor: pointer; /* Pointer on hover */
+    transition: background-color 0.3s ease; /* Transition for hover effect */
+}
+
+.card-add-to-cart:hover {
+    background-color: #218838; /* Darker green on hover */
+}
+
+.card-more-info {
+    color: #007bff; /* Blue link */
+    text-decoration: none; /* No underline */
+    font-weight: bold; /* Bold for visibility */
+    transition: color 0.3s; /* Transition for hover effect */
+}
+
+.card-more-info:hover {
+    color: #0056b3; /* Darker blue on hover */
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .card-container {
+        flex-direction: column; /* Stack cards on small screens */
+        align-items: center; /* Center align */
+    }
+}

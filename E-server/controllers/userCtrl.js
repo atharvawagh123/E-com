@@ -1,38 +1,51 @@
 const Users = require('../models/userModel');
+const Product = require('../models/productModel');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
 const userCtrl = {
     register: async (req, res) => {
         try {
+            console.log(req.body);
             const { name, email, password } = req.body;
 
+            // Check for missing password
+            if (!password) {
+                return res.status(400).json({ msg: "Password is required" });
+            }
+
+            // Check password length
             if (password.length < 6) {
                 return res.status(400).json({ msg: "Password must be at least 6 characters long" });
             }
 
+            // Hash the password
             const saltRounds = 10;
             const hashedPassword = await bcrypt.hash(password, saltRounds);
 
+            // Create new user
             const newUser = new Users({
                 name,
                 email,
                 password: hashedPassword
             });
 
+            // Save user to the database
             await newUser.save();
 
+            // Create tokens
             const accesstoken = createAccessToken({ id: newUser._id });
             const refreshtoken = createRefreshToken({ id: newUser._id });
 
-            res.cookie('refreshToken', refreshToken, {
+            // Set refresh token in cookies
+            res.cookie('refreshtoken', refreshtoken, {
                 httpOnly: true,
                 sameSite: 'None',  // Allows cross-origin requests
-                secure: true,      // Ensures cookies are sent only over HTTPS
+                secure: true,      // Ensures cookies are sent only over HTTPS (adjust for local dev if needed)
                 maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
             });
 
-
+            // Return access token in response
             res.json({ accesstoken });
 
         } catch (err) {
@@ -59,6 +72,7 @@ const userCtrl = {
 
     login: async (req, res) => {
         try {
+            console.log(req.body);
             const { email, password } = req.body;
 
             const user = await Users.findOne({ email });
@@ -67,16 +81,17 @@ const userCtrl = {
             const isMatch = await bcrypt.compare(password, user.password);
             if (!isMatch) return res.status(400).json({ msg: "Incorrect password" });
 
+            // Create tokens
             const accesstoken = createAccessToken({ id: user._id });
             const refreshtoken = createRefreshToken({ id: user._id });
 
-            res.cookie('refreshToken', refreshToken, {
+            // Set refresh token in cookies
+            res.cookie('refreshtoken', refreshtoken, {
                 httpOnly: true,
                 sameSite: 'None',  // Allows cross-origin requests
                 secure: true,      // Ensures cookies are sent only over HTTPS
                 maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
             });
-
 
             res.json({ accesstoken });
         } catch (err) {
@@ -86,7 +101,7 @@ const userCtrl = {
 
     logout: async (req, res) => {
         try {
-            res.clearCookie('refreshtoken', { path: '/user/refresh_token' });
+            res.clearCookie('refreshtoken'); // No need for path unless set during cookie creation
             return res.json({ msg: "Logged Out" });
         } catch (err) {
             return res.status(500).json({ msg: err.message });
@@ -103,24 +118,61 @@ const userCtrl = {
         }
     },
 
+   
+
     Updatecart: async (req, res) => {
         try {
-            const user = await Users.findById(req.user.id);
+            const { email, product_id } = req.body; // Now only getting product_id
+            console.log(email, product_id);
+            // Find the user by their email
+            const user = await Users.findOne({ email });
             if (!user) return res.status(400).json({ msg: "User does not exist." });
 
-            user.cart = req.body.cart;
+            // Validate that the product_id is provided
+            if (!product_id) {
+                return res.status(400).json({ msg: "Product ID is required." });
+            }
+
+            // Find the product by product_id
+            const existingProduct = await Product.findById(product_id);
+            console.log(existingProduct); // This will help in debugging
+            if (!existingProduct) return res.status(400).json({ msg: "Product does not exist." });
+
+
+            // Prepare the cart item
+            const cartItem = {
+                images: existingProduct.images,
+                price: existingProduct.price,
+                title: existingProduct.title,
+                product_id: existingProduct._id,
+                // You can add any other required fields from the product as needed
+                quantity: 1, // Default quantity set to 1, if applicable
+            };
+
+            // Push the cart item into the user's cart
+            user.cart.push(cartItem);
+
+            // Save the updated user document
             await user.save();
-            return res.json({ msg: "Added to cart" });
+            return res.json({ msg: "Product added to cart" });
         } catch (err) {
             return res.status(500).json({ msg: err.message });
         }
     },
 
+
+
     Getcart: async (req, res) => {
         try {
-            const user = await Users.findById(req.user._id).populate('cart.product');
+            // Extract the email from the request body (sent by the frontend)
+            const { email } = req.body;
+
+            // Find the user by email and populate the cart with product details
+            const user = await Users.findOne({ email }).populate('cart');
+            console.log(user);
             if (!user) return res.status(400).json({ msg: "User does not exist." });
 
+            // Send back the user's cart
             res.json({ cart: user.cart });
         } catch (err) {
             return res.status(500).json({ msg: err.message });
@@ -183,12 +235,12 @@ const userCtrl = {
     }
 };
 
-const createAccessToken = (payload) => {
-    return jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1d' });
+const createAccessToken = (user) => {
+    return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
 };
 
-const createRefreshToken = (payload) => {
-    return jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '7d' });
+const createRefreshToken = (user) => {
+    return jwt.sign(user, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '7d' });
 };
 
 module.exports = userCtrl;
