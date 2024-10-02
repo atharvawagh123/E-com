@@ -35,18 +35,6 @@
   transform: translateY(-5px);
 }
 
-.delete-btn {
-  font-size: 1.5rem;
-  color: #ff3b30;
-  cursor: pointer;
-  margin-right: 1rem;
-  transition: color 0.3s ease-in-out;
-}
-
-.delete-btn:hover {
-  color: #d12c22;
-}
-
 .cart-image img {
   width: 80px;
   height: 80px;
@@ -58,6 +46,9 @@
 
 .cart-info {
   flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   margin-left: 1.5rem;
 }
 
@@ -78,6 +69,21 @@
   color: #333;
 }
 
+.delete-btn {
+  color: #000;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 24px;
+  margin-left: auto; /* Pushes delete button to the far right */
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.delete-btn:hover {
+  color: #ff3b30;
+  transform: scale(1.2);
+}
+
 @media screen and (max-width: 768px) {
   .cart-item {
     flex-direction: column;
@@ -85,9 +91,9 @@
   }
 
   .delete-btn {
-    align-self: flex-start;
-    margin-right: 0;
-    margin-bottom: 1rem;
+    align-self: flex-end;
+    margin-left: 0;
+    margin-top: 1rem;
   }
 
   .cart-image {

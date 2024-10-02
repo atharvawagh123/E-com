@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom'; // Add useNavigate to handle redirects
 import '../css/Navbar.css';
+import { AiOutlineHome, AiOutlineShoppingCart, AiOutlineUser } from "react-icons/ai"; 
+import { FiLogOut } from "react-icons/fi"; 
 
 function Navbar() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -26,21 +28,30 @@ function Navbar() {
     return (
         <nav className="navbar">
             <div className="navbar-container">
-                <h1 className="navbar-logo">MyStore</h1>
+                <div className="navbar-logo-container">
+                    <AiOutlineUser className="user-logo" /> {/* User icon */}
+                    <h1 className="navbar-logo">MyStore</h1>
+                </div>
                 <ul className="navbar-menu">
                     <li className="navbar-item">
-                        <Link to="/" className="navbar-link">Products</Link>
+                        <Link to="/" className="navbar-link">
+                            <AiOutlineHome /> {/* Home icon */}
+                        </Link>
                     </li>
                     <li className="navbar-item">
-                        <Link to="/cart" className="navbar-link">Cart</Link>
+                        <Link to="/cart" className="navbar-link">
+                            <AiOutlineShoppingCart /> {/* Cart icon */}
+                        </Link>
                     </li>
                     <li className="navbar-item">
                         {isLoggedIn ? (
                             <button className="navbar-link logout-button" onClick={handleLogout}>
-                                Logout
+                                <FiLogOut /> {/* Logout icon */}
                             </button>
                         ) : (
-                            <Link to="/login" className="navbar-link">Sign Up</Link>
+                            <Link to="/login" className="navbar-link">
+                                <AiOutlineUser /> {/* User icon */}
+                            </Link>
                         )}
                     </li>
                 </ul>

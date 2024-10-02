@@ -69,23 +69,24 @@ const Cart = () => {
     return (
         <div className="cart-container">
             <h2 className="cart-heading">Your Cart</h2>
-            {loading && <p>Loading...</p>} {/* Show loading state */}
+            {loading && <p>Loading...</p>}
             {error && <p style={{ color: 'red' }}>{error}</p>}
             {cartItems.length > 0 ? (
                 <ul className="cart-list">
                     {cartItems.map((item, index) => (
-                        <li key={item._id} className="cart-item"> {/* Use item._id for the key */}
+                        <li key={item._id} className="cart-item">
                             <div className="cart-image">
                                 <img src={item.images.url} alt={item.title} />
                             </div>
                             <div className="cart-info">
                                 <h3 className="cart-item-title">{item.title}</h3>
-                                <p className="cart-item-quantity">Quantity: {item.quantity}</p> {/* Access title directly */}
+                                <p className="cart-item-quantity">Quantity: {item.quantity}</p>
                                 <p className="cart-item-price">${item.price}</p>
-                                <MdDelete className="delete-btn" onClick={() => handleDelete(index)}/>
-                                    {/* You may need to import this */}
-                              
                             </div>
+                            <MdDelete
+                                className="delete-btn"
+                                onClick={() => handleDelete(index)}
+                            />
                         </li>
                     ))}
                 </ul>
@@ -93,6 +94,7 @@ const Cart = () => {
                 <p>Your cart is empty.</p>
             )}
         </div>
+
 
     );
 };

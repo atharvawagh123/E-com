@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom'; // Import Link for navigation
 import '../css/Product.css'; // Ensure to import the CSS file
 import { ToastContainer, toast } from 'react-toastify'; // Import ToastContainer and toast
 import 'react-toastify/dist/ReactToastify.css'; // Import CSS for Toastify
+import { IoIosAddCircle } from 'react-icons/io'; // Import the icon
+
 
 function Products() {
     const [products, setProducts] = useState([]);
@@ -75,12 +77,7 @@ function Products() {
                         <p className="card-description">{product.description}</p>
                         <p className="card-category">Category: {product.category}</p>
                         <div className="card-button-container">
-                            <button
-                                className="card-add-to-cart"
-                                onClick={() => handleAddToCart(product._id)} // Pass only product ID
-                            >
-                                Add to Cart
-                            </button>
+                            <IoIosAddCircle className="card-logo" onClick={() => handleAddToCart(product._id)} />
                             <Link to={`/Product/${product._id}`} className="card-more-info"> {/* Navigate to ProductDetail */}
                                 More Info
                             </Link>
