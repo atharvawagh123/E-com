@@ -2,22 +2,30 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import '../css/ProductDetail.css';
 import { IoIosAddCircle } from 'react-icons/io';
-import { FaCartPlus } from 'react-icons/fa'; // Import FaCartPlus
-import { ToastContainer, toast } from 'react-toastify'; // Import ToastContainer and toast
-import 'react-toastify/dist/ReactToastify.css'; // Import toast styles
+import { FaCartPlus } from 'react-icons/fa';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { IoSend } from 'react-icons/io5'; // Importing the send icon
+import { IoPersonCircle } from 'react-icons/io5'; // Importing the account icon
+import axios from 'axios';
 
 function ProductDetail() {
     const { id } = useParams();
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [newComment, setNewComment] = useState('');
+    const [comments, setComments] = useState([]);
+    const name = localStorage.getItem('userName'); // Correct variable name
 
     useEffect(() => {
-        const fetchProduct = async () => {
+        const fetchProductAndComments = async () => {
             try {
                 const response = await fetch(`http://localhost:5000/api/products/${id}`);
                 const data = await response.json();
+
                 if (data.status === 'success') {
                     setProduct(data.product);
+                    setComments(data.product.comments || []); // Ensure comments is an array
                 } else {
                     console.error('Product not found');
                 }
@@ -28,7 +36,7 @@ function ProductDetail() {
             }
         };
 
-        fetchProduct();
+        fetchProductAndComments();
     }, [id]);
 
     const handleAddToCart = async (product_id) => {
@@ -47,16 +55,56 @@ function ProductDetail() {
             });
 
             if (response.ok) {
-                // Handle successful addition to cart
                 console.log('Product added to cart');
-                toast.success('Product added to cart!'); // Show success notification
+                toast.success('Product added to cart!');
             } else {
                 console.error('Failed to add product to cart');
-                toast.error('Failed to add product to cart.'); // Show error notification
+                toast.error('Failed to add product to cart.');
             }
         } catch (error) {
             console.error('Error adding product to cart:', error);
-            toast.error('Error adding product to cart.'); // Show error notification
+            toast.error('Error adding product to cart.');
+        }
+    };
+
+    const handleAddComment = async () => {
+        if (!newComment) {
+            toast.error('Comment cannot be empty.');
+            return;
+        }
+
+        try {
+            const response = await fetch(`http://localhost:5000/api/products/${id}/comments`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    username: name,
+                    comment: newComment,
+                }),
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+
+                if (data.newComment) {
+                    console.log('Comment added successfully');
+                    setComments((prevComments) => [...prevComments, data.newComment]); // Append new comment to the state
+                    setNewComment(''); // Clear the input field
+                    toast.success('Comment added successfully!');
+                } else {
+                    console.error('Unexpected response structure:', data);
+                    toast.error('Failed to retrieve new comment data.');
+                }
+            } else {
+                const errorData = await response.json();
+                console.error('Failed to add comment:', errorData);
+                toast.error('Failed to add comment.');
+            }
+        } catch (error) {
+            console.error('Error adding comment:', error);
+            toast.error('Error adding comment.');
         }
     };
 
@@ -69,27 +117,62 @@ function ProductDetail() {
     }
 
     return (
-        <div className="product-detail-container">
-            <ToastContainer /> {/* ToastContainer to render notifications */}
-            <div className="product-info">
-                <div className="product-image">
-                    <img src={product.images.url} alt={product.title} className="product-first-detail-image" />
-                </div>
-                <div className="product-details">
-                    <h2 className="product-title">{product.title}</h2>
-                    <p className="product-price">Price: ${product.price}</p>
-                    <p className="product-description">{product.description}</p>
-                    <p className="product-category">Category: {product.category}</p>
-                    <div className="button-container">
-                        <IoIosAddCircle className="cart-logo" onClick={() => handleAddToCart(product._id)} /> {/* Logo as an icon */}
-                        <Link to="/cart" className="go-to-cart-button">
-                            <FaCartPlus className="cart-icon" /> {/* Use FaCartPlus icon */}
-                            Go to Cart
-                        </Link>
+        <>
+            <div className="product-detail-container">
+                <ToastContainer />
+                <div className="product-info">
+                    <div className="product-image">
+                        <img src={product.images.url} alt={product.title} className="product-first-detail-image" />
+                    </div>
+                    <div className="product-details">
+                        <h2 className="product-title">{product.title}</h2>
+                        <p className="product-price">Price: ${product.price}</p>
+                        <p className="product-description">{product.description}</p>
+                        <p className="product-category">Category: {product.category}</p>
+                        <div className="button-container">
+                            <IoIosAddCircle className="cart-logo" onClick={() => handleAddToCart(product._id)} />
+                            <Link to="/cart" className="go-to-cart-button">
+                                <FaCartPlus className="cart-icon" />
+                                Go to Cart
+                            </Link>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+
+            {/* Comments Section */}
+            <h2 className="reviews-title">User Reviews</h2>
+            <div className="product-comments-section">
+                {comments.length > 0 ? (
+                    <div className="comments-wrapper">
+                        {comments.map((comment, index) => (
+                            <div key={index} className="single-comment-item">
+                                <IoPersonCircle className="user-avatar" /> {/* Account icon */}
+                                <h3 className="comment-username">{comment.username}</h3>
+                                <p className="comment-text">{comment.comment}</p>
+                            </div>
+                        ))}
+                    </div>
+                ) : (
+                    <p className="no-comments-message">No reviews yet.</p>
+                )}
+            </div>
+
+            {/* Add Comment Section */}
+            <h3 className="add-comment-title">Leave a Comment</h3>
+            <div className="comment-input-section">
+                <input
+                    value={newComment}
+                    onChange={(e) => setNewComment(e.target.value)}
+                    placeholder="Write your comment here..."
+                    className="new-comment-input"
+                />
+                <IoSend  onClick={handleAddComment} className="submit-comment-button"/>
+                  
+                
+            </div>
+
+        </>
     );
 }
 

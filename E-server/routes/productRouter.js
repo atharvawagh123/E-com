@@ -17,29 +17,27 @@ router.route('/products/:id')
 // Route to add a comment to a product
 router.post('/products/:id/comments', async (req, res) => {
     try {
+        const productId = req.params.id;
         const { username, comment } = req.body;
 
-        if (!username || !comment) {
-            return res.status(400).json({ msg: 'Username and comment are required' });
+        // Logic to add comment to the product...
+        const newComment = { username, comment, createdAt: new Date() }; // Create a new comment object
+
+        // Assuming you're saving the comment to a database and fetching the updated product
+        const updatedProduct = await Products.findByIdAndUpdate(
+            productId,
+            { $push: { comments: newComment } },
+            { new: true } // Return the updated document
+        );
+
+        if (updatedProduct) {
+            return res.status(201).json({ newComment: updatedProduct.comments[updatedProduct.comments.length - 1] });
+        } else {
+            return res.status(404).json({ message: 'Product not found' });
         }
-
-        // Find the product by ID
-        const product = await Products.findById(req.params.id);
-
-        if (!product) {
-            return res.status(404).json({ msg: 'Product not found' });
-        }
-
-        // Add the comment to the product's comments array
-        product.comments.push({ username, comment });
-
-        // Save the updated product
-        await product.save();
-
-        res.json({ msg: 'Comment added successfully!', comments: product.comments });
-    } catch (err) {
-        console.error('Error adding comment:', err);
-        res.status(500).json({ msg: 'An error occurred', error: err.message });
+    } catch (error) {
+        console.error('Error adding comment:', error);
+        return res.status(500).json({ message: 'Internal server error' });
     }
 });
 

@@ -121,3 +121,55 @@
         height: auto; /* Maintain aspect ratio */
     }
 }
+/* Title for Comments Section */
+.reviews-title, .add-comment-title {
+    text-align: center; /* Center the title text */
+    margin: 20px 0; /* Vertical spacing around the title */
+    font-size: 1.5rem; /* Font size */
+    font-weight: bold; /* Bold font weight */
+    color: #333; /* Dark color for contrast */
+}
+/* Product Comments Section */
+.product-comments-section {
+    border: 1px solid #e0e0e0; /* Light border for section */
+    border-radius: 8px; /* Rounded corners */
+    padding: 20px; /* Padding inside the section */
+    margin: 20px auto; /* Center the section with auto margins */
+    background-color: #f9f9f9; /* Light background */
+    max-height: 500px; /* Increased max height for scroll */
+    overflow-y: auto; /* Scrollbar for overflow */
+    width: 90%; /* Width of the section */
+    max-width: 600px; /* Max width for larger screens */
+}
+
+/* Single Comment Item */
+.single-comment-item {
+    gap: 10px;
+    display: flex; /* Use flex for layout */
+    align-items: center; /* Center elements vertically */
+    margin-bottom: 15px; /* Space between comments */
+    padding: 10px; /* Padding inside comment item */
+    border-bottom: 1px solid #e0e0e0; /* Bottom border */
+    width: 100%; /* Make comment item take the full width of the section */
+}
+
+/* Comment Input Section */
+.comment-input-section {
+    display: flex; /* Flex layout */
+    align-items: center; /* Align items vertically */
+    margin: 20px auto; /* Center the input section */
+    width: 90%; /* Width of the input section */
+    max-width: 600px; /* Max width for larger screens */
+}
+
+/* New Comment Input */
+.new-comment-input {
+    flex: 1; /* Take available space */
+    height: 60px; /* Fixed height */
+    padding: 10px; /* Padding inside input */
+    border: 1px solid #ccc; /* Light border */
+    border-radius: 5px; /* Rounded corners */
+    font-size: 1rem; /* Font size */
+    resize: none; /* Disable resizing */
+    margin-right: 10px; /* Space between input and button */
+}

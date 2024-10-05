@@ -148,6 +148,7 @@ const productCtrl = {
         try {
             // Find the product by ID using the req.params.id
             const product = await Products.findById(req.params.id);
+            console.log(product)
 
             // If the product is not found, return a 404 error
             if (!product) {

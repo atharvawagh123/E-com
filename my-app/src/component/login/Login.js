@@ -21,17 +21,20 @@ const Login = () => {
             });
 
             const data = await response.json();
+            console.log(data.user.name);
+            localStorage.setItem('userName', data.user.name)
 
             if (response.ok) {
                 // Save the email in localStorage
                 localStorage.setItem('userEmail', email);
+               
 
                 // Handle successful login (e.g., store the access token)
                 setSuccess('Login successful!');
                 setError('');
 
                 // Navigate to /product after successful login
-                navigate('/product');
+                navigate('/');
             } else {
                 // Handle error
                 setError(data.msg);
