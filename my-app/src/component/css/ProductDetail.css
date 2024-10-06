@@ -3,6 +3,7 @@
     margin: 2rem; /* Margin around the container */
     display: flex;
     justify-content: flex-start; /* Align items to the start */
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
 }
 
 /* Product Info */
@@ -10,6 +11,8 @@
     display: flex; /* Flexbox layout */
     align-items: flex-start; /* Align items at the start */
     gap: 2rem; /* Space between image and details */
+    flex-wrap: wrap; /* Wrap content on smaller screens */
+    width: 100%;
 }
 
 /* Product Image */
@@ -18,8 +21,9 @@
 }
 
 .product-first-detail-image {
-    width: 400px; /* Increased width for the image */
-    height: 400px; /* Increased height for the image */
+    width: 100%; /* Full width for responsiveness */
+    max-width: 400px; /* Limit width on larger screens */
+    height: auto; /* Maintain aspect ratio */
     object-fit: cover; /* Maintain aspect ratio */
     border-radius: 8px; /* Rounded corners */
     border: 1px solid #000; /* Optional border for the image */
@@ -31,6 +35,7 @@
     display: flex;
     flex-direction: column; /* Column layout for details */
     justify-content: space-between; /* Space out details evenly */
+    width: 100%; /* Full width */
 }
 
 /* Product Title */
@@ -54,7 +59,6 @@
     margin: 0.5rem 0; /* Margin around description */
 }
 
-/* Button Container */
 /* Button Container */
 .button-container {
     display: flex; /* Use flex to align items */
@@ -82,26 +86,11 @@
 .go-to-cart-button:hover {
     background-color: #444; /* Darker gray on hover */
 }
-
-/* Cart Logo Icon */
-.cart-logo {
-    cursor: pointer; /* Pointer cursor for the logo */
-    font-size: 2rem; /* Size of the icon */
-    color: #000; /* Black color for the icon */
+.cart-logo{
+    font-size: 3rem;
+    margin-right: 0.5rem;
+    color: #000;
 }
-
-/* Cart Icon */
-.cart-icon {
-    margin-right: 0.5rem; /* Space between icon and text */
-    font-size: 1.5rem; /* Size of the icon */
-    color: #fff; /* White color for the icon */
-}
-
-/* Optional: Style for the Add to Cart icon */
-.cart-logo:hover {
-    color: #007bff; /* Change color on hover */
-}
-
 
 /* Responsive Design */
 @media screen and (max-width: 768px) {
@@ -120,7 +109,13 @@
         width: 100%; /* Full width on small screens */
         height: auto; /* Maintain aspect ratio */
     }
+
+    .product-details {
+        width: 100%; /* Full width on smaller screens */
+    }
 }
+
+/* Comments Section */
 /* Title for Comments Section */
 .reviews-title, .add-comment-title {
     text-align: center; /* Center the title text */
@@ -129,6 +124,7 @@
     font-weight: bold; /* Bold font weight */
     color: #333; /* Dark color for contrast */
 }
+
 /* Product Comments Section */
 .product-comments-section {
     border: 1px solid #e0e0e0; /* Light border for section */
@@ -138,8 +134,8 @@
     background-color: #f9f9f9; /* Light background */
     max-height: 500px; /* Increased max height for scroll */
     overflow-y: auto; /* Scrollbar for overflow */
-    width: 90%; /* Width of the section */
-    max-width: 600px; /* Max width for larger screens */
+    width: 95%; /* Increased width for comment section */
+    max-width: 800px; /* Max width for larger screens */
 }
 
 /* Single Comment Item */
@@ -153,13 +149,21 @@
     width: 100%; /* Make comment item take the full width of the section */
 }
 
+/* Delete Comment Icon */
+.delete-comment-icon {
+    cursor: pointer;
+    font-size: 1.5rem;
+    color: rgb(0, 0, 0);
+    margin-left: auto; /* Automatically push to the right */
+}
+
 /* Comment Input Section */
 .comment-input-section {
     display: flex; /* Flex layout */
     align-items: center; /* Align items vertically */
     margin: 20px auto; /* Center the input section */
-    width: 90%; /* Width of the input section */
-    max-width: 600px; /* Max width for larger screens */
+    width: 95%; /* Increased width for the input section */
+    max-width: 800px; /* Max width for larger screens */
 }
 
 /* New Comment Input */
@@ -172,4 +176,16 @@
     font-size: 1rem; /* Font size */
     resize: none; /* Disable resizing */
     margin-right: 10px; /* Space between input and button */
+}
+
+/* Button Adjustments for Small Screens */
+@media screen and (max-width: 768px) {
+    .product-comments-section, .comment-input-section {
+        width: 100%; /* Full width on small screens */
+        max-width: 100%; /* Remove max width for full width */
+    }
+
+    .new-comment-input {
+        height: 50px; /* Adjust input height for small screens */
+    }
 }

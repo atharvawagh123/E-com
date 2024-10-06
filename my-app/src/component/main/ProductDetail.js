@@ -7,7 +7,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { IoSend } from 'react-icons/io5'; // Importing the send icon
 import { IoPersonCircle } from 'react-icons/io5'; // Importing the account icon
-import axios from 'axios';
+import { MdDeleteForever } from "react-icons/md";
 
 function ProductDetail() {
     const { id } = useParams();
@@ -66,7 +66,7 @@ function ProductDetail() {
             toast.error('Error adding product to cart.');
         }
     };
-
+  
     const handleAddComment = async () => {
         if (!newComment) {
             toast.error('Comment cannot be empty.');
@@ -116,6 +116,33 @@ function ProductDetail() {
         return <div className="error">Product not found</div>;
     }
 
+    const Deletecomment = async (commentId) => {
+        console.log(commentId);
+        try {
+            const response = await fetch(`http://localhost:5000/api/products/${id}/comments/${commentId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (response.ok) {
+                console.log('Comment deleted successfully');
+                setComments((prevComments) =>
+                    prevComments.filter((comment) => comment._id !== commentId)
+                ); // Remove the deleted comment from state
+                toast.success('Comment deleted successfully!');
+            } else {
+                console.error('Failed to delete comment');
+                toast.error('Failed to delete comment.');
+            }
+        } catch (error) {
+            console.error('Error deleting comment:', error);
+            toast.error('Error deleting comment.');
+        }
+    };
+
+
     return (
         <>
             <div className="product-detail-container">
@@ -150,8 +177,12 @@ function ProductDetail() {
                                 <IoPersonCircle className="user-avatar" /> {/* Account icon */}
                                 <h3 className="comment-username">{comment.username}</h3>
                                 <p className="comment-text">{comment.comment}</p>
-                            </div>
-                        ))}
+                                {name === comment.username && (
+                                    <MdDeleteForever  onClick={() => Deletecomment(comment._id)} className="delete-comment-icon" />
+                                )}
+                                </div>
+
+                        ))} 
                     </div>
                 ) : (
                     <p className="no-comments-message">No reviews yet.</p>
