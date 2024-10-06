@@ -12,17 +12,13 @@ router.get('/products/:id', productCtrl.getProductById);
 router.route('/products/:id')
     .delete(productCtrl.deleteProduct)
     .put(productCtrl.updateProduct);
-    
+
+  
 // Route to add a comment to a product
 router.post('/products/:id/comments', async (req, res) => {
     try {
         const productId = req.params.id;
         const { username, comment } = req.body;
-
-        // Check if username is provided
-        if (!username) {
-            return res.status(400).json({ message: 'Username is required to add a comment.' });
-        }
 
         // Logic to add comment to the product...
         const newComment = { username, comment, createdAt: new Date() }; // Create a new comment object
@@ -45,7 +41,6 @@ router.post('/products/:id/comments', async (req, res) => {
     }
 });
 
-
 // Route to get all comments for a specific product
 router.get('/products/:id/comments', async (req, res) => {
     try {
@@ -61,7 +56,6 @@ router.get('/products/:id/comments', async (req, res) => {
         res.status(500).json({ msg: 'An error occurred', error: err.message });
     }
 });
-
 // Route to delete a specific comment from a product
 router.delete('/products/:id/comments/:commentId', async (req, res) => {
     try {
@@ -71,18 +65,19 @@ router.delete('/products/:id/comments/:commentId', async (req, res) => {
             return res.status(404).json({ msg: 'Product not found' });
         }
 
-        // Find the index of the comment to delete
-        const commentIndex = product.comments.findIndex(comment => comment._id.toString() === req.params.commentId);
+        // Check if the comment exists in the comments array
+        const commentExists = product.comments.some(comment => comment._id.toString() === req.params.commentId);
 
-        if (commentIndex === -1) {
+        if (!commentExists) {
             return res.status(404).json({ msg: 'Comment not found' });
         }
 
-        // Remove the comment from the array
-        product.comments.splice(commentIndex, 1);
-
-        // Save the updated product
-        await product.save();
+        // Use $pull to remove the comment directly
+        await Products.findByIdAndUpdate(
+            req.params.id,
+            { $pull: { comments: { _id: req.params.commentId } } },
+            { new: true } // This will return the updated product
+        );
 
         res.json({ msg: 'Comment deleted successfully!', comments: product.comments });
     } catch (err) {
@@ -90,7 +85,6 @@ router.delete('/products/:id/comments/:commentId', async (req, res) => {
         res.status(500).json({ msg: 'An error occurred', error: err.message });
     }
 });
-
 
 
 module.exports = router;
