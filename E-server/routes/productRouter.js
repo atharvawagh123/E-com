@@ -19,6 +19,9 @@ router.post('/products/:id/comments', async (req, res) => {
     try {
         const productId = req.params.id;
         const { username, comment } = req.body;
+        if (!username) {
+            return res.status(400).json({ msg: 'Username and comment are required' });
+        }
 
         // Logic to add comment to the product...
         const newComment = { username, comment, createdAt: new Date() }; // Create a new comment object
