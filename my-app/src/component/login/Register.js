@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
+import '../css/Register.css'
 
 const Register = () => {
   const [name, setName] = useState(''); // State for name
@@ -54,53 +55,58 @@ const Register = () => {
   };
 
   return (
-    <div className="register-container">
-      <h2>Register</h2>
-      <form onSubmit={handleRegister}>
-        <div>
-          <label>Name:</label>
+    <div className="register-form-container">
+      <h2 className="register-title">Register</h2>
+      <form className="register-form" onSubmit={handleRegister}>
+        <div className="form-group">
+          <label className="form-label">Name:</label>
           <input
             type="text"
+            className="form-input"
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
           />
         </div>
-        <div>
-          <label>Email:</label>
+        <div className="form-group">
+          <label className="form-label">Email:</label>
           <input
             type="email"
+            className="form-input"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
           />
         </div>
-        <div>
-          <label>Password:</label>
+        <div className="form-group">
+          <label className="form-label">Password:</label>
           <input
             type="password"
+            className="form-input"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
           />
         </div>
-        <div>
-          <label>Confirm Password:</label>
+        <div className="form-group">
+          <label className="form-label">Confirm Password:</label>
           <input
             type="password"
+            className="form-input"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             required
           />
         </div>
-        <button type="submit">Register</button>
+        <button type="submit" className="register-button">Register</button>
       </form>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      {success && <p style={{ color: 'green' }}>{success}</p>}
-      <p>
-        Already have an account? <Link to="/">Login here</Link>
+      {error && <p className="error-message">{error}</p>}
+      {success && <p className="success-message">{success}</p>}
+      <p className="login-link">
+        Already have an account? <Link to="/login">Login here</Link>
       </p>
     </div>
+
   );
 };
 
