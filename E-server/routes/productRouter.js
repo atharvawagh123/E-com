@@ -12,13 +12,17 @@ router.get('/products/:id', productCtrl.getProductById);
 router.route('/products/:id')
     .delete(productCtrl.deleteProduct)
     .put(productCtrl.updateProduct);
-
-  
+    
 // Route to add a comment to a product
 router.post('/products/:id/comments', async (req, res) => {
     try {
         const productId = req.params.id;
         const { username, comment } = req.body;
+
+        // Check if username is provided
+        if (!username) {
+            return res.status(400).json({ message: 'Username is required to add a comment.' });
+        }
 
         // Logic to add comment to the product...
         const newComment = { username, comment, createdAt: new Date() }; // Create a new comment object
@@ -40,6 +44,7 @@ router.post('/products/:id/comments', async (req, res) => {
         return res.status(500).json({ message: 'Internal server error' });
     }
 });
+
 
 // Route to get all comments for a specific product
 router.get('/products/:id/comments', async (req, res) => {

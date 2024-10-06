@@ -66,7 +66,7 @@ function ProductDetail() {
             toast.error('Error adding product to cart.');
         }
     };
-  
+
     const handleAddComment = async () => {
         if (!newComment) {
             toast.error('Comment cannot be empty.');
@@ -142,7 +142,6 @@ function ProductDetail() {
         }
     };
 
-
     return (
         <>
             <div className="product-detail-container">
@@ -178,11 +177,10 @@ function ProductDetail() {
                                 <h3 className="comment-username">{comment.username}</h3>
                                 <p className="comment-text">{comment.comment}</p>
                                 {name === comment.username && (
-                                    <MdDeleteForever  onClick={() => Deletecomment(comment._id)} className="delete-comment-icon" />
+                                    <MdDeleteForever onClick={() => Deletecomment(comment._id)} className="delete-comment-icon" />
                                 )}
-                                </div>
-
-                        ))} 
+                            </div>
+                        ))}
                     </div>
                 ) : (
                     <p className="no-comments-message">No reviews yet.</p>
@@ -198,11 +196,8 @@ function ProductDetail() {
                     placeholder="Write your comment here..."
                     className="new-comment-input"
                 />
-                <IoSend  onClick={handleAddComment} className="submit-comment-button"/>
-                  
-                
+                <IoSend onClick={handleAddComment} className="submit-comment-button" disabled={!name} /> {/* Disable if name is not available */}
             </div>
-
         </>
     );
 }
