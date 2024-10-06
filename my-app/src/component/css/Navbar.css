@@ -98,16 +98,28 @@
 /* Ensure responsiveness */
 @media screen and (max-width: 768px) {
   .navbar-container {
-    flex-direction: column;
-    align-items: center;
+    flex-direction: column; /* Stack items vertically */
+    align-items: flex-start; /* Align items to the start */
   }
 
   .navbar-menu {
-    margin-top: 1rem;
-    flex-direction: column;
+    margin-top: 1rem; /* Space above menu */
+    flex-direction: column; /* Stack menu items vertically */
+    width: 100%; /* Full width for menu */
   }
 
   .navbar-item {
-    margin: 0.5rem 0;
+    margin: 0.5rem 0; /* Spacing between items */
+    width: 100%; /* Make each item full width */
+    text-align: center; /* Center-align text for better appearance */
+  }
+
+  .navbar-link {
+    justify-content: center; /* Center content within links */
+  }
+
+  .logout-button {
+    width: 100%; /* Make logout button full width */
+    text-align: center; /* Center-align button text */
   }
 }
